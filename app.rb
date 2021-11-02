@@ -52,9 +52,12 @@ end
 
 post '/new' do
 	# получаем переменную из post-запроса
-
 	content = params[:content]
 
-	erb "You taped #{content}"
+		if content.length <= 0
+			@error = 'Type post text'
+			return erb :new
+		end
 
+	erb "You taped #{content}"
 end
