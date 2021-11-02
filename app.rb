@@ -71,10 +71,13 @@ post '/new' do
 	redirect to '/'
 end
 
-# вывод информации о посте (универсальный обработчик)
+# вывод информации о посте (универсальный обработчик) :post_id - получаем параметр из url
 
 get '/details/:post_id' do
 	post_id = params[:post_id]
 
-	erb "Displaying information for post with id #{post_id}"
+	results = @db.execute 'select * from Posts where id = ?', [post_id]
+	@row = results[0]
+
+	erb :details
 end
