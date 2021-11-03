@@ -31,6 +31,7 @@ configure do
 	(
 	"id"           INTEGER PRIMARY KEY AUTOINCREMENT,
 	"created_Date" DATE,
+	"name"		   TEXT,
 	"content"      TEXT
 	)'
 
@@ -66,7 +67,7 @@ end
 post '/new' do
 	# получаем переменную из post-запроса
 	content = params[:content]
-
+	name 	= params[:name]
 	if content.length <= 0
 		@error = 'Type post text'
 		return erb :new
@@ -74,7 +75,7 @@ post '/new' do
 
 	# сохранение данных в БД
 
-	@db.execute 'insert into Posts (content, created_date) values (?, datetime())', [content]
+	@db.execute 'insert into Posts (content, name, created_date) values (?, ?, datetime())', [content, name]
 
 	# перенаправление на главную страницу
 
