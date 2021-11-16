@@ -6,20 +6,18 @@ require 'sinatra/activerecord'
 
 set :database, {adapter: "sqlite3", database: "Leprosorium.db"}
 
-class Comments < ActiveRecord::Base
+class Comment < ActiveRecord::Base
 
 end
 
-class Posts < ActiveRecord::Base
+class Post < ActiveRecord::Base
 	
 end
 	# before вызывается каждый раз при перезагрузке
 	# любой страницы
 
 before do
-	# инициализация БД
-
-
+	@results = Post.all
 end
 
 	# configure вызывается каждый раз при конфигурации приложения:
@@ -35,8 +33,6 @@ end
 
 get '/' do
 	# выбираем список постов из БД
-
-
 	erb :index
 end
 
@@ -48,14 +44,13 @@ get '/new' do
 	erb :new
 end
 
-	# обработчик post - запроса /new
-	# (браузер отправляет данные на сервер)
-
 post '/new' do
-	# получаем переменную из post-запроса
-
-
+	# получаем переменные из post-запроса
 	# сохранение данных в БД
+	@p = Post.new params[:post]
+	@p.save
+
+
 
 
 
@@ -66,10 +61,10 @@ end
 
 # вывод информации о посте (универсальный обработчик) :post_id - получаем параметр из url
 
-get '/details/:post_id' do
+get '/details/:id' do
 	# получаем переменную из url'a
-
-
+	@res = Post.find(params[:id])
+	@comment = Comment.all
 	# получаем список постов
 	# (у нас будет только один пост)
 
@@ -88,14 +83,10 @@ end
 # обработчик post-запроса /details/
 # (браузер отправляет данные на сервер, мы их принимаем)
 
-post '/details/:post_id' do
-	# получаем переменную из url'a
+post '/details/:id' do
 
-	# получаем переменную из post-запроса
+	@c = Comment.new params[:comment]
+	@c.save
 
-	# сохранение данных в БД
-
-
-	# перенаправление на страницу поста
-
+	erb :details
 end
