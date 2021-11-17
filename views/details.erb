@@ -9,9 +9,9 @@
 <br />
 <h4>Comments:</h4>
 <br />
-<% @comment.each do |comment| %>
+<% @results_comment.each do |comment| %>
     <p>
-    <%= comment.content %>
+    <%= comment.content_comment %>
     <br />
     <br />
     <span style="font-size: 75%; color: #999"> Added at <%= comment.created_at%> </span>
@@ -21,7 +21,7 @@
 
 <p>
     <form action="/details/<%= @res.id %> " method="POST">
-        <textarea name="comment[content]" class="form-control" rows="6" placeholder="Type comment text here"></textarea>
+        <textarea name="comment[content_comment]" class="form-control" rows="6" placeholder="Type comment text here"></textarea>
         <br />
         <button type="submit" class="btn btn-primary btn-lg">Add comment</button>
     </form>

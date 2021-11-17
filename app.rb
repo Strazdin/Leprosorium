@@ -5,19 +5,19 @@ require 'sinatra/reloader'
 require 'sinatra/activerecord'
 
 set :database, {adapter: "sqlite3", database: "Leprosorium.db"}
-
 class Comment < ActiveRecord::Base
-
+	belongs_to :post
 end
 
 class Post < ActiveRecord::Base
-	
+	has_many :comments
 end
 	# before вызывается каждый раз при перезагрузке
 	# любой страницы
 
 before do
-	@results = Post.all
+	@results = Post.all.order('created_at DESC')
+	#@comment = Comment.where(post_id: @results.id)
 end
 
 	# configure вызывается каждый раз при конфигурации приложения:
@@ -64,11 +64,12 @@ end
 get '/details/:id' do
 	# получаем переменную из url'a
 	@res = Post.find(params[:id])
-	@comment = Comment.all
+	@results_comment = Comment.where(post_id: @res.id)#.order('created_at DESC')
+	#@comment = Comment.where(post_id: @res.id)
+	#erb "#{@res.methods}"
 	# получаем список постов
 	# (у нас будет только один пост)
 
-	
 	# выбираем этот один пост в переменную @row
 
 
@@ -84,9 +85,9 @@ end
 # (браузер отправляет данные на сервер, мы их принимаем)
 
 post '/details/:id' do
-
+	@res = Post.find(params[:id])
 	@c = Comment.new params[:comment]
+	@c.post_id = @res.id
 	@c.save
-
 	erb :details
 end
