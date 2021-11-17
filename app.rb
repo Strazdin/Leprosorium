@@ -64,7 +64,7 @@ end
 get '/details/:id' do
 	# получаем переменную из url'a
 	@res = Post.find(params[:id])
-	@results_comment = Comment.where(post_id: @res.id)#.order('created_at DESC')
+	@results_comment = Comment.where(post_id: @res.id).order('created_at DESC')
 	#@comment = Comment.where(post_id: @res.id)
 	#erb "#{@res.methods}"
 	# получаем список постов
@@ -89,5 +89,6 @@ post '/details/:id' do
 	@c = Comment.new params[:comment]
 	@c.post_id = @res.id
 	@c.save
+	@results_comment = Comment.where(post_id: @res.id).order('created_at DESC')
 	erb :details
 end
