@@ -11,6 +11,8 @@ end
 
 class Post < ActiveRecord::Base
 	has_many :comments
+	validates :name, presence: true, length: { minimum: 3 }
+	validates :content, presence: true
 end
 	# before вызывается каждый раз при перезагрузке
 	# любой страницы
@@ -49,14 +51,19 @@ post '/new' do
 	# сохранение данных в БД
 	@p = Post.new params[:post]
 	@p.save
-
+	if @p.save
+		redirect to '/'
+	else
+		@error = @p.errors.full_messages.first
+		erb :new
+	end
 
 
 
 
 	# перенаправление на главную страницу
 
-	redirect to '/'
+
 end
 
 # вывод информации о посте (универсальный обработчик) :post_id - получаем параметр из url
